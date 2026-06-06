@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMS — Employee Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/index.css" />
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- NAV -->
+<nav>
+    <a class="nav-logo" href="/index.html">EMS<span>.</span></a>
+    <div class="nav-links">
+        <a href="html/list-employees.html">Employees</a>
+        <a href="html/create-employee.html" class="nav-btn">Add Employee</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="badge">
+        <span class="badge-dot"></span>
+        System Online — Spring Boot Running
+    </div>
+
+    <h1>
+        Welcome to the<br/>
+        <span class="line-accent">Employee Management</span><br/>
+        System
+    </h1>
+
+    <p class="hero-sub">
+        A full-stack platform to manage your workforce — create, view, update,
+        and delete employee records backed by a live Spring Boot REST API.
+    </p>
+
+    <div class="hero-actions">
+        <a href="html/create-employee.html" class="btn-primary">
+            ＋ &nbsp;Add Employee
+        </a>
+        <a href="html/list-employees.html" class="btn-ghost">
+            View All Employees →
+        </a>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-num" id="empCount">—</div>
+            <div class="stat-label">Total Employees</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <div class="stat-num"><span>5</span></div>
+            <div class="stat-label">REST Endpoints</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <div class="stat-num"><span>8080</span></div>
+            <div class="stat-label">Server Port</div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+    <p class="section-label">What you can do</p>
+    <h2 class="section-title">Everything in one place</h2>
+
+    <div class="cards-grid">
+        <div class="feature-card">
+            <div class="card-icon icon-purple">＋</div>
+            <div class="card-title">Create Employees</div>
+            <div class="card-desc">Add new employee records with first name, last name, and email. Validated on both frontend and backend.</div>
+        </div>
+        <div class="feature-card">
+            <div class="card-icon icon-teal">◎</div>
+            <div class="card-title">View All Employees</div>
+            <div class="card-desc">Fetch and display the full list of employees from the MySQL database in real time.</div>
+        </div>
+        <div class="feature-card">
+            <div class="card-icon icon-amber">✎</div>
+            <div class="card-title">Update Records</div>
+            <div class="card-desc">Edit any employee's details and instantly persist the changes to the database via PUT request.</div>
+        </div>
+        <div class="feature-card">
+            <div class="card-icon icon-pink">✕</div>
+            <div class="card-title">Delete Employees</div>
+            <div class="card-desc">Remove employee records safely. The backend verifies existence before deletion and returns 204 No Content.</div>
+        </div>
+    </div>
+</section>
+
+<!-- API REFERENCE -->
+<section class="api-section">
+    <p class="section-label">REST API</p>
+    <h2 class="section-title">Available Endpoints</h2>
+
+    <div class="endpoint-list">
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="ep-path">/api/employees</span>
+            <span class="ep-desc">Create employee</span>
+        </div>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="ep-path">/api/employees</span>
+            <span class="ep-desc">Get all employees</span>
+        </div>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="ep-path">/api/employees/{id}</span>
+            <span class="ep-desc">Get employee by ID</span>
+        </div>
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <span class="ep-path">/api/employees/{id}</span>
+            <span class="ep-desc">Update employee</span>
+        </div>
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <span class="ep-path">/api/employees/{id}</span>
+            <span class="ep-desc">Delete employee</span>
+        </div>
+    </div>
+</section>
+
+<footer>
+    Built with Spring Boot · MySQL · jQuery · Served on port 8080
+</footer>
+
+<script src="/js/jquery-3.7.1.min.js"></script>
+<script>
+    // Live employee count from your backend
+    $.ajax({
+        url     : 'http://localhost:8080/api/employees',
+        type    : 'GET',
+        success : function(data) {
+            $('#empCount').text(data.length);
+        },
+        error   : function() {
+            $('#empCount').text('—');
+        }
+    });
+</script>
+</body>
+</html>

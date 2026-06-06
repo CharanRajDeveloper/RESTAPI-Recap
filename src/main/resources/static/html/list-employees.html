@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMS — All Employees</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:      #0b0f1a;
+            --surface: #111827;
+            --border:  rgba(255,255,255,0.07);
+            --accent:  #6c63ff;
+            --accent2: #00d4aa;
+            --text:    #f0f0f0;
+            --muted:   #8a93a8;
+            --card-bg: rgba(255,255,255,0.03);
+        }
+
+        html, body {
+            min-height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 3rem;
+            background: rgba(11,15,26,0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { font-size: 0.875rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-btn {
+            font-size: 0.85rem; font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        .nav-btn:hover { background: var(--accent); color: #fff; }
+
+        /* PAGE */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 7rem 2rem 4rem;
+        }
+
+        /* HEADER ROW */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            animation: fadeUp 0.5s ease forwards;
+        }
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -1px;
+        }
+        .page-title span { color: var(--accent); }
+
+        .header-right { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+
+        /* SEARCH */
+        .search-wrap { position: relative; }
+        .search-wrap input {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.55rem 1rem 0.55rem 2.4rem;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-wrap input::placeholder { color: var(--muted); }
+        .search-wrap input:focus { border-color: rgba(108,99,255,0.5); }
+        .search-icon {
+            position: absolute;
+            left: 10px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        /* BUTTONS */
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 0.55rem 1.25rem;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem; font-weight: 500;
+            border-radius: 8px;
+            text-decoration: none; border: none; cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+        .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        .btn-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px;
+            border-radius: 6px; border: 1px solid var(--border);
+            background: transparent; cursor: pointer;
+            font-size: 0.85rem; color: var(--muted);
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .btn-icon:hover { background: rgba(255,255,255,0.06); color: var(--text); border-color: rgba(255,255,255,0.15); }
+        .btn-icon.danger:hover { background: rgba(255,80,80,0.1); color: #ff6060; border-color: rgba(255,80,80,0.3); }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+        .stat-pill {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+        .stat-pill strong { color: var(--text); font-weight: 500; }
+
+        /* TABLE */
+        .table-wrap {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead tr {
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            padding: 0.9rem 1.25rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.025); }
+        td { padding: 1rem 1.25rem; font-size: 0.9rem; vertical-align: middle; }
+
+        /* AVATAR */
+        .avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: rgba(108,99,255,0.2);
+            color: var(--accent);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.75rem; font-weight: 700;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .name-cell { display: flex; align-items: center; }
+        .name-text { font-weight: 500; }
+
+        .id-badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            background: rgba(108,99,255,0.12);
+            color: var(--accent);
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .email-text { color: var(--muted); font-size: 0.875rem; }
+
+        .actions-cell { display: flex; gap: 6px; }
+
+        /* EMPTY / LOADING / ERROR STATES */
+        .state-box {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--muted);
+            display: none;
+        }
+        .state-box .state-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+        .state-box p { font-size: 0.95rem; }
+
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid rgba(108,99,255,0.2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* TOAST */
+        #toast {
+            position: fixed;
+            bottom: 2rem; right: 2rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.success { background: rgba(0,212,170,0.15); color: var(--accent2); border: 1px solid rgba(0,212,170,0.3); }
+        #toast.error   { background: rgba(255,80,80,0.12); color: #ff6060;        border: 1px solid rgba(255,80,80,0.3); }
+
+        footer {
+            position: relative; z-index: 1;
+            text-align: center; padding: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.82rem; color: var(--muted);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a class="nav-logo" href="/index.html">EMS<span>.</span></a>
+    <div class="nav-links">
+        <a href="/index.html">Home</a>
+        <a href="/html/create-employee.html" class="nav-btn">＋ Add Employee</a>
+    </div>
+</nav>
+
+<div class="page">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <div class="page-title">All <span>Employees</span></div>
+        <div class="header-right">
+            <div class="search-wrap">
+                <span class="search-icon">⌕</span>
+                <input type="text" id="searchInput" placeholder="Search by name or email..." />
+            </div>
+            <button class="btn-icon" onclick="loadEmployees()" title="Refresh">↻</button>
+            <a href="/html/create-employee.html" class="btn-primary">＋ &nbsp;Add Employee</a>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+        <div class="stat-pill">Total: <strong id="totalCount">—</strong></div>
+        <div class="stat-pill">Showing: <strong id="showingCount">—</strong></div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+
+        <!-- Loading state -->
+        <div class="state-box" id="loadingState" style="display:block">
+            <div class="spinner"></div>
+            <p>Fetching employees from server...</p>
+        </div>
+
+        <!-- Empty state -->
+        <div class="state-box" id="emptyState">
+            <div class="state-icon">👤</div>
+            <p>No employees found.</p>
+        </div>
+
+        <!-- Error state -->
+        <div class="state-box" id="errorState">
+            <div class="state-icon">⚠</div>
+            <p id="errorMsg">Could not connect to the server.</p>
+        </div>
+
+        <!-- Table -->
+        <table id="empTable" style="display:none">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="empTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<footer>
+    Built with Spring Boot · MySQL · jQuery · Served on port 8080
+</footer>
+
+<script src="/js/jquery-3.7.1.min.js"></script>
+<script src="/js/list-employees.js"></script>
+</body>
+</html>
